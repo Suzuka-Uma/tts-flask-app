@@ -20,13 +20,21 @@ if not os.path.exists(AUDIO_DIR):
 
 # Dictionary of available free voices
 VOICES = {
+    # Vietnamese
     'nam_minh_northern_male': 'vi-VN-NamMinhNeural',
-    'hoai_my_southern_female': 'vi-VN-HoaiMyNeural'
+    'hoai_my_southern_female': 'vi-VN-HoaiMyNeural',
+    # English
+    'jenny_us_female': 'en-US-JennyNeural',
+    'guy_us_male': 'en-US-GuyNeural'
 }
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/en')
+def english_index():
+    return render_template('en.html')
 
 @app.route('/api/synthesize', methods=['POST'])
 def synthesize():

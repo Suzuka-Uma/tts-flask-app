@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const textInput = document.getElementById('text-input');
     const charCurrent = document.getElementById('char-current');
     const voiceSelect = document.getElementById('voice-select');
-    const animeVoiceSelect = document.getElementById('anime-voice-select');
     const generateBtn = document.getElementById('generate-btn');
     const btnText = document.querySelector('.btn-text');
     const btnLoader = document.querySelector('.btn-loader');
@@ -33,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', async () => {
         const text = textInput.value.trim();
         const voice = voiceSelect.value;
-        const animeVoice = animeVoiceSelect.value;
 
         if (!text) {
             showError("Vui lòng nhập văn bản tiếng Việt.");
@@ -46,11 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioContainer.classList.add('hidden');
 
         // Setup Loading State
-        if (animeVoice !== 'none') {
-            btnLoader.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cloning Anime Voice... (may take a minute)';
-        } else {
-            btnLoader.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-        }
+        btnLoader.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
         setLoading(true);
 
         try {
@@ -59,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text, voice, anime_voice: animeVoice })
+                body: JSON.stringify({ text, voice })
             });
 
             const data = await response.json();

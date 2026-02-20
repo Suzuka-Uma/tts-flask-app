@@ -21,8 +21,11 @@
     <div class="container">
         <!-- Add a language switcher at the top -->
         <div style="text-align: right; margin-bottom: 1rem;">
-            <a href="http://127.0.0.1:5001/" class="secondary-btn" style="text-decoration: none; padding: 0.5rem 1rem;">
+            <a href="/en" class="secondary-btn" style="text-decoration: none; padding: 0.5rem 1rem;">
                 🇬🇧 Switch to English
+            </a>
+            <a href="/jp" class="secondary-btn" style="text-decoration: none; padding: 0.5rem 1rem;">
+                🇯🇵 Switch to Japanese
             </a>
         </div>
 
@@ -43,52 +46,43 @@
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="anime-voice-select">Anime Voice Filter (Optional)</label>
-                <div class="custom-select-wrapper">
-                    <select id="anime-voice-select" class="custom-select">
-                        <option value="none">❌ None (Use Base Voice)</option>
-                        <option value="mahiru">🌸 Shiina Mahiru</option>
-                    </select>
-                    <i class="fa-solid fa-chevron-down select-icon"></i>
+            <div class="glass-panel">
+
+                <div class="input-group">
+                    <label for="text-input">Enter Text</label>
+                    <textarea id="text-input"
+                        placeholder="Nhập văn bản tiếng Việt vào đây... (Ví dụ: Xin chào, bạn có khỏe không?)"
+                        rows="6"></textarea>
+                    <div class="char-count"><span id="char-current">0</span> / 1000</div>
+                </div>
+
+                <button id="generate-btn" class="primary-btn">
+                    <span class="btn-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Speech</span>
+                    <span class="btn-loader hidden"><i class="fa-solid fa-spinner fa-spin"></i> Processing...</span>
+                </button>
+
+                <div id="error-message" class="alert error hidden">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="error-text">An error occurred.</span>
+                </div>
+
+                <div id="audio-container" class="audio-panel hidden">
+                    <h3><i class="fa-solid fa-headphones"></i> Your Audio is Ready</h3>
+                    <audio id="audio-player" controls>
+                        Your browser does not support the audio element.
+                    </audio>
+                    <a id="download-btn" class="secondary-btn" href="#" download>
+                        <i class="fa-solid fa-download"></i> Download MP3
+                    </a>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="text-input">Enter Text</label>
-                <textarea id="text-input"
-                    placeholder="Nhập văn bản tiếng Việt vào đây... (Ví dụ: Xin chào, bạn có khỏe không?)"
-                    rows="6"></textarea>
-                <div class="char-count"><span id="char-current">0</span> / 1000</div>
-            </div>
-
-            <button id="generate-btn" class="primary-btn">
-                <span class="btn-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Speech</span>
-                <span class="btn-loader hidden"><i class="fa-solid fa-spinner fa-spin"></i> Processing...</span>
-            </button>
-
-            <div id="error-message" class="alert error hidden">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <span id="error-text">An error occurred.</span>
-            </div>
-
-            <div id="audio-container" class="audio-panel hidden">
-                <h3><i class="fa-solid fa-headphones"></i> Your Audio is Ready</h3>
-                <audio id="audio-player" controls>
-                    Your browser does not support the audio element.
-                </audio>
-                <a id="download-btn" class="secondary-btn" href="#" download>
-                    <i class="fa-solid fa-download"></i> Download MP3
-                </a>
-            </div>
+            <footer>
+                <p>Built with <i class="fa-solid fa-heart"></i> using Flask and Microsoft Edge TTS</p>
+            </footer>
         </div>
 
-        <footer>
-            <p>Built with <i class="fa-solid fa-heart"></i> using Flask and Microsoft Edge TTS</p>
-        </footer>
-    </div>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
 </html>

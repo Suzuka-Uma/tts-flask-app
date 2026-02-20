@@ -6,20 +6,36 @@ import uuid
 
 app = Flask(__name__)
 
-# Directory to store generated audio files
+# Config
 AUDIO_DIR = os.path.join(os.path.dirname(__file__), 'audio')
+
 if not os.path.exists(AUDIO_DIR):
     os.makedirs(AUDIO_DIR)
 
-# Dictionary of available free voices
+# Dictionaries of available free voices
 VOICES = {
+    # Vietnamese
     'nam_minh_northern_male': 'vi-VN-NamMinhNeural',
-    'hoai_my_southern_female': 'vi-VN-HoaiMyNeural'
+    'hoai_my_southern_female': 'vi-VN-HoaiMyNeural',
+    # English
+    'jenny_us_female': 'en-US-JennyNeural',
+    'guy_us_male': 'en-US-GuyNeural',
+    # Japanese
+    'nanami_jp_female': 'ja-JP-NanamiNeural',
+    'keita_jp_male': 'ja-JP-KeitaNeural'
 }
 
 @app.route('/')
-def index():
+def index_vi():
     return render_template('index.html')
+
+@app.route('/en')
+def index_en():
+    return render_template('en.html')
+
+@app.route('/jp')
+def index_jp():
+    return render_template('jp.html')
 
 @app.route('/api/synthesize', methods=['POST'])
 def synthesize():
@@ -29,10 +45,11 @@ def synthesize():
     
     text = data['text']
     voice_key = data['voice']
-
-    if voice_key not in VOICES:
-         return jsonify({"error": "Invalid voice selected"}), 400
     
+    # Check if voice_key exists
+    if voice_key not in VOICES:
+        return jsonify({"error": "Invalid voice selected"}), 400
+
     voice_id = VOICES[voice_key]
     
     # Generate a unique filename
@@ -45,7 +62,9 @@ def synthesize():
         await communicate.save(filepath)
     
     try:
+        # Generate base TTS
         asyncio.run(_generate_audio())
+            
         return jsonify({
             "success": True, 
             "audio_url": f"/audio/{filename}"

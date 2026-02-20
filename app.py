@@ -3,8 +3,15 @@ import edge_tts
 import asyncio
 import os
 import uuid
+from rvc_service import convert_voice, init_rvc
 
 app = Flask(__name__)
+
+# Initialize RVC locally if possible
+try:
+    init_rvc()
+except Exception as e:
+    print(f"RVC intialization failed: {e}")
 
 # Directory to store generated audio files
 AUDIO_DIR = os.path.join(os.path.dirname(__file__), 'audio')
@@ -29,26 +36,42 @@ def synthesize():
     
     text = data['text']
     voice_key = data['voice']
+    anime_voice = data.get('anime_voice', 'none') # Can be 'none' or 'mahiru'
 
     if voice_key not in VOICES:
-         return jsonify({"error": "Invalid voice selected"}), 400
+         return jsonify({"error": "Invalid base voice selected"}), 400
     
     voice_id = VOICES[voice_key]
     
     # Generate a unique filename
-    filename = f"{uuid.uuid4()}.mp3"
-    filepath = os.path.join(AUDIO_DIR, filename)
+    base_filename = f"{uuid.uuid4()}_base.mp3"
+    final_filename = f"{uuid.uuid4()}_final.mp3"
+    
+    base_filepath = os.path.join(AUDIO_DIR, base_filename)
+    final_filepath = os.path.join(AUDIO_DIR, final_filename)
     
     # We use asyncio to run the edge-tts generation
     async def _generate_audio():
         communicate = edge_tts.Communicate(text, voice_id)
-        await communicate.save(filepath)
+        await communicate.save(base_filepath)
     
     try:
+        # Step 1: Generate Base TTS Audio
         asyncio.run(_generate_audio())
+        
+        # Step 2: Apply RVC if requested
+        if anime_voice == 'mahiru':
+            convert_voice(base_filepath, final_filepath)
+            # We serve the final (cloned) file
+            serve_filename = final_filename
+            # Cleanup base if you want, but leaving it is fine for debugging.
+        else:
+            # If no anime voice, serve the base TTS directly
+            serve_filename = base_filename
+
         return jsonify({
             "success": True, 
-            "audio_url": f"/audio/{filename}"
+            "audio_url": f"/audio/{serve_filename}"
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500

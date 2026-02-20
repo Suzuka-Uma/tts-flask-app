@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vietnamese Text to Speech App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <div class="background-effects">
         <div class="glow glow-1"></div>
@@ -23,7 +26,7 @@
 
         <div class="glass-panel">
             <div class="input-group">
-                <label for="voice-select">Select Voice</label>
+                <label for="voice-select">Base TTS Voice</label>
                 <div class="custom-select-wrapper">
                     <select id="voice-select" class="custom-select">
                         <option value="hoai_my_southern_female">👩 Hoài My (Southern, Female)</option>
@@ -34,8 +37,21 @@
             </div>
 
             <div class="input-group">
+                <label for="anime-voice-select">Anime Voice Filter (Optional)</label>
+                <div class="custom-select-wrapper">
+                    <select id="anime-voice-select" class="custom-select">
+                        <option value="none">❌ None (Use Base Voice)</option>
+                        <option value="mahiru">🌸 Shiina Mahiru</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-icon"></i>
+                </div>
+            </div>
+
+            <div class="input-group">
                 <label for="text-input">Enter Text</label>
-                <textarea id="text-input" placeholder="Nhập văn bản tiếng Việt vào đây... (Ví dụ: Xin chào, bạn có khỏe không?)" rows="6"></textarea>
+                <textarea id="text-input"
+                    placeholder="Nhập văn bản tiếng Việt vào đây... (Ví dụ: Xin chào, bạn có khỏe không?)"
+                    rows="6"></textarea>
                 <div class="char-count"><span id="char-current">0</span> / 1000</div>
             </div>
 
@@ -59,7 +75,7 @@
                 </a>
             </div>
         </div>
-        
+
         <footer>
             <p>Built with <i class="fa-solid fa-heart"></i> using Flask and Microsoft Edge TTS</p>
         </footer>
@@ -67,4 +83,5 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>

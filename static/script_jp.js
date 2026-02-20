@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const voice = voiceSelect.value;
 
         if (!text) {
-            showError("Please enter some English text.");
+            showError("Please enter some Japanese text.");
             textInput.focus();
             return;
         }
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const uniqueUrl = data.audio_url + '?t=' + new Date().getTime(); // Prevent caching
             audioPlayer.src = uniqueUrl;
             downloadBtn.href = uniqueUrl;
-            downloadBtn.download = `English_TTS_${Date.now()}.mp3`;
+            downloadBtn.download = `Japanese_TTS_${Date.now()}.mp3`;
 
             audioContainer.classList.remove('hidden');
             audioPlayer.play().catch(e => console.log("Auto-play blocked", e));

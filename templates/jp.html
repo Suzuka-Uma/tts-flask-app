@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Text to Speech App</title>
+    <title>Japanese Text to Speech App</title>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,23 +21,27 @@
     <div class="container">
         <!-- Add a language switcher at the top -->
         <div style="text-align: right; margin-bottom: 1rem;">
-            <a href="http://127.0.0.1:5000/" class="secondary-btn" style="text-decoration: none; padding: 0.5rem 1rem;">
+            <a href="http://127.0.0.1:5000/" class="secondary-btn"
+                style="text-decoration: none; padding: 0.5rem 1rem; margin-right: 0.5rem;">
                 🇻🇳 Switch to Vietnamese
+            </a>
+            <a href="http://127.0.0.1:5001/" class="secondary-btn" style="text-decoration: none; padding: 0.5rem 1rem;">
+                🇺🇸 Switch to English
             </a>
         </div>
 
         <div class="header">
-            <h1><i class="fa-solid fa-volume-high"></i> English TTS</h1>
-            <p>Convert your text into natural English speech</p>
+            <h1><i class="fa-solid fa-volume-high"></i> Japanese TTS</h1>
+            <p>Convert your text into natural Japanese speech</p>
         </div>
 
         <div class="glass-panel">
             <div class="input-group">
-                <label for="voice-select">English TTS Voice</label>
+                <label for="voice-select">Japanese TTS Voice</label>
                 <div class="custom-select-wrapper">
                     <select id="voice-select" class="custom-select">
-                        <option value="jenny_us_female">👩 Jenny (US, Female)</option>
-                        <option value="guy_us_male">👨 Guy (US, Male)</option>
+                        <option value="nanami_jp_female">👩 Nanami (Japan, Female)</option>
+                        <option value="keita_jp_male">👨 Keita (Japan, Male)</option>
                     </select>
                     <i class="fa-solid fa-chevron-down select-icon"></i>
                 </div>
@@ -45,8 +49,7 @@
 
             <div class="input-group">
                 <label for="text-input">Enter Text</label>
-                <textarea id="text-input"
-                    placeholder="Type your English text here... (Example: Hello, how are you today?)"
+                <textarea id="text-input" placeholder="Type your Japanese text here... (Example: こんにちは、お元気ですか？)"
                     rows="6"></textarea>
                 <div class="char-count"><span id="char-current">0</span> / 1000</div>
             </div>
@@ -77,7 +80,7 @@
         </footer>
     </div>
 
-    <script src="{{ url_for('static', filename='script_en.js') }}"></script>
+    <script src="{{ url_for('static', filename='script_jp.js') }}"></script>
 </body>
 
 </html>

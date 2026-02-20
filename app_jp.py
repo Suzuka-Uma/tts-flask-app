@@ -11,15 +11,15 @@ AUDIO_DIR = os.path.join(os.path.dirname(__file__), 'audio')
 if not os.path.exists(AUDIO_DIR):
     os.makedirs(AUDIO_DIR)
 
-# Dictionary of available free voices
+# Dictionary of available Japanese free voices
 VOICES = {
-    'nam_minh_northern_male': 'vi-VN-NamMinhNeural',
-    'hoai_my_southern_female': 'vi-VN-HoaiMyNeural'
+    'nanami_jp_female': 'ja-JP-NanamiNeural',
+    'keita_jp_male': 'ja-JP-KeitaNeural'
 }
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('jp.html')
 
 @app.route('/api/synthesize', methods=['POST'])
 def synthesize():
@@ -58,4 +58,4 @@ def serve_audio(filename):
     return send_from_directory(AUDIO_DIR, filename)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5002)

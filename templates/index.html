@@ -1,114 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python TTS Web App</title>
+    <title>Vietnamese Text to Speech App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Text-to-Speech Generator</h1>
-        <p>Powered by Python, Flask, and Piper TTS</p>
-        
-        <!-- Bọc các control vào một nhóm -->
-        <div id="controls-group">
-            <div class="controls" id="voice-select-container">
-                <label for="voice-select">Choose a voice:</label>
-                <select id="voice-select">
-                    {% for voice_id, voice_name in voices.items() %}
-                        <option value="{{ voice_id }}">{{ voice_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <!-- THÊM CHECKBOX MỚI TẠI ĐÂY -->
-            <div class="controls">
-                <input type="checkbox" id="alternate-voices-checkbox" name="alternate-voices">
-                <label for="alternate-voices-checkbox">Alternate voices by paragraph (Male/Female)</label>
-            </div>
-        </div>
-
-
-        <textarea id="text-input" placeholder="Enter text to convert to speech...&#10;Use new lines to create paragraphs.&#10;If 'Alternate voices' is checked, paragraph 1 will be male, 2 will be female, 3 will be male again, and so on." rows="8"></textarea>
-        <button id="generate-btn">Generate Audio</button>
-        <div id="result-container">
-            <!-- Audio player will appear here -->
-        </div>
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="glow glow-3"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const generateBtn = document.getElementById('generate-btn');
-            const textInput = document.getElementById('text-input');
-            const voiceSelect = document.getElementById('voice-select');
-            const resultContainer = document.getElementById('result-container');
-            // Lấy các element mới
-            const alternateCheckbox = document.getElementById('alternate-voices-checkbox');
-            const voiceSelectContainer = document.getElementById('voice-select-container');
+    <div class="container">
+        <div class="header">
+            <h1><i class="fa-solid fa-volume-high"></i> Vietnamese TTS</h1>
+            <p>Convert your text into natural Vietnamese speech</p>
+        </div>
 
-            // Ẩn/hiện dropdown chọn giọng nói tùy thuộc vào checkbox
-            alternateCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    voiceSelectContainer.style.display = 'none';
-                } else {
-                    voiceSelectContainer.style.display = 'block';
-                }
-            });
+        <div class="glass-panel">
+            <div class="input-group">
+                <label for="voice-select">Select Voice</label>
+                <div class="custom-select-wrapper">
+                    <select id="voice-select" class="custom-select">
+                        <option value="hoai_my_southern_female">👩 Hoài My (Southern, Female)</option>
+                        <option value="nam_minh_northern_male">👨 Nam Minh (Northern, Male)</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-icon"></i>
+                </div>
+            </div>
 
-            generateBtn.addEventListener('click', function() {
-                const text = textInput.value.trim();
-                const voice = voiceSelect.value;
-                // Lấy trạng thái của checkbox
-                const alternate = alternateCheckbox.checked;
+            <div class="input-group">
+                <label for="text-input">Enter Text</label>
+                <textarea id="text-input" placeholder="Nhập văn bản tiếng Việt vào đây... (Ví dụ: Xin chào, bạn có khỏe không?)" rows="6"></textarea>
+                <div class="char-count"><span id="char-current">0</span> / 1000</div>
+            </div>
 
-                if (!text) {
-                    alert('Please enter some text.');
-                    return;
-                }
+            <button id="generate-btn" class="primary-btn">
+                <span class="btn-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Speech</span>
+                <span class="btn-loader hidden"><i class="fa-solid fa-spinner fa-spin"></i> Processing...</span>
+            </button>
 
-                generateBtn.disabled = true;
-                generateBtn.textContent = 'Generating...';
-                resultContainer.innerHTML = '<p class="loading">Please wait, creating your audio...</p>';
+            <div id="error-message" class="alert error hidden">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="error-text">An error occurred.</span>
+            </div>
 
-                // Tạo payload để gửi đi
-                const payload = {
-                    text: text,
-                    voice: voice,
-                    alternate: alternate // Gửi trạng thái checkbox đến server
-                };
+            <div id="audio-container" class="audio-panel hidden">
+                <h3><i class="fa-solid fa-headphones"></i> Your Audio is Ready</h3>
+                <audio id="audio-player" controls>
+                    Your browser does not support the audio element.
+                </audio>
+                <a id="download-btn" class="secondary-btn" href="#" download>
+                    <i class="fa-solid fa-download"></i> Download MP3
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Built with <i class="fa-solid fa-heart"></i> using Flask and Microsoft Edge TTS</p>
+        </footer>
+    </div>
 
-                fetch('/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload), // Gửi payload đã tạo
-                })
-                .then(response => {
-                    if (!response.ok) { 
-                        // Cố gắng đọc lỗi từ JSON nếu có
-                        return response.json().then(err => { throw new Error(err.error || 'Network response was not ok.') });
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    const audioUrl = URL.createObjectURL(blob);
-                    resultContainer.innerHTML = `
-                        <audio controls autoplay>
-                            <source src="${audioUrl}" type="audio/wav">
-                        </audio>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Hiển thị thông báo lỗi cụ thể hơn nếu có
-                    resultContainer.innerHTML = `<p class="error">Sorry, something went wrong: ${error.message}. Please try again.</p>`;
-                })
-                .finally(() => {
-                    generateBtn.disabled = false;
-                    generateBtn.textContent = 'Generate Audio';
-                });
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
